@@ -92,38 +92,42 @@
         var stopElem = document.getElementById("stop")
         var download = document.getElementById("download")
         let recorder, stream; 
+        let audioTrack, videoTrack; 
         const gdmOptions = {
             video: {
                 cursor: "always"
             },
-            audio: {
-                echoCancellation: true, 
-                noiseSuppression: true, 
-                sampleRate: 44100
-            }
+            audio: true
         }       
         async function startCapture() {
             logElem.innerHTML = "";
             videoElem.classList.remove('hidden')
             video.classList.add('hidden')
             try {
-                stream  = await navigator.mediaDevices.getDisplayMedia(gdmOptions);
-                videoElem.srcObject = stream 
-                recorder = new MediaRecorder(stream)
-
-                const chunks = []
-                recorder.ondataavailable = e => {
-                    chunks.push(e.data)
-                }
-                recorder.onstop = e => {                    
-                    videoElem.classList.add('hidden')
-                    video.classList.remove('hidden')
-                    const completed = new Blob(chunks, {type: chunks[0].type})
-                    video.src = URL.createObjectURL(completed)   
-                    download.href = window.URL.createObjectURL(completed)
-                }
-                recorder.start()
-                dumpOptionsInfo();
+                navigator.mediaDevices.getDisplayMedia({video:true})
+                    .then(displayStream =>{
+                        [videoTrack] = displayStream.getVideoTracks() 
+                        navigator.mediaDevices.getUserMedia({audio:true})
+                            .then(audioStream=>{
+                                [audioTrack] = audioStream.getAudioTracks()
+                                stream = new MediaStream([videoTrack, audioTrack])
+                                videoElem.srcObject = stream 
+                                recorder = new MediaRecorder(stream)                
+                                const chunks = []
+                                recorder.ondataavailable = e => {
+                                    chunks.push(e.data)
+                                }
+                                recorder.onstop = e => {                    
+                                    videoElem.classList.add('hidden')
+                                    video.classList.remove('hidden')
+                                    const completed = new Blob(chunks, {type: chunks[0].type})
+                                    video.src = URL.createObjectURL(completed)   
+                                    download.href = window.URL.createObjectURL(completed)
+                                }
+                                recorder.start()
+                                dumpOptionsInfo();
+                            })
+                })
             } catch(err) {
                 console.error("Error: " + err);
             }
