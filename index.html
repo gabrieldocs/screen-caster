@@ -6,191 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gabriel Santos | Screen Caster</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
-    <style>
-        @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400&display=swap");
-        body { 
-            font-family: 'Noto Sans JP', sans-serif;
-            margin: 0 10vh;
-            /* background-color: #212121;
-            color: white; */
-
-        }
-        button { 
-            padding: 12px 24px;
-            border: solid 2px;
-            background-color: white;
-            box-shadow: 3px 3px;
-        }
-        button:hover { 
-            cursor: pointer;
-        }
-        button  {
-            margin-right: 12px;
-        }
-        header { 
-            margin-bottom: 12px;
-        }
-        main { 
-            display: grid;
-            grid-template-columns: 6;
-            grid-template-rows: minmax(100px, auto);
-        }
-        main video {             
-            border: solid rgb(0, 0, 0);
-            box-shadow: 3px 3px;
-
-        }
-        header, section { 
-            grid-column-start: 1;
-            grid-column-end: 7;            
-        }
-
-        .error {
-        color: red;
-        }
-
-        .warn {
-        color: orange;
-        }
-
-        .info {
-        color: darkgreen;
-        }
-        .hidden {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="/dist/css/index.css">    
 </head>
 <body>
-    
+    <nav>
+        <h3>Gabriel Santos</h3>
+        <ul>
+            <li><a target="_blank" href="https://twitter.com/lucgbrl">Twitter</a></li>
+            <li><a target="_blank" href="http://t.me/lucgbrl">Telegram</a></li>  
+        </ul>
+    </nav>
     <main>
         <header>
-            <h1>Gabriel Santos | Screen Caster </h1>
+            <h1>Experiment | Screen Caster </h1>
             <p>This is a simple experiment with Screen Capture API</p>
-            <p><a target="_blank" href="https://twitter.com/lucgbrl">Twitter</a></p>
-            <p><a target="_blank" href="http://t.me/lucgbrl">Telegram</a></p>
+            <!-- <p><a target="_blank" href="https://twitter.com/lucgbrl">Twitter</a></p>
+            <p><a target="_blank" href="http://t.me/lucgbrl">Telegram</a></p>          -->
+        </header>
+        <menu>
             <button id="start"> <i class="fa fa-play"></i> Start capture</button>
             <button id="stop"> <i class="fa fa-stop"></i> Stop recording</button>
             <button id="upload"> <i class="fa fa-user"></i> Upload resource</button>
             <a id="download"> <button><i class="fa fa-download"></i> Download recording</button></a>
-        </header>
-        <section>
+        </menu>
+        <section>           
             <!-- <video id="user" autoplay width="320" height="320"></video> -->
             <video id="video" autoplay width="100%" height="auto"></video>
-            <video id="play" class="hidden" autoplay width="100%" height="auto"></video>
-            <div>
-                <strong>Status</strong>
-                <pre id="log"></pre>
-            </div>
+            <video id="play" class="hidden" autoplay width="100%" height="auto"></video>                     
         </section>        
+        <div class="status">
+            <strong>Status</strong>
+            <pre id="log"></pre>
+        </div>
     </main>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        // var user = document.getElementById("user")
-        var video = document.getElementById("play")
-        var videoElem = document.getElementById("video")
-        var logElem = document.getElementById("log")
-        var uploadElem = document.getElementById("uploadElem")
-        var startElem = document.getElementById("start")
-        var stopElem = document.getElementById("stop")
-        var download = document.getElementById("download")
-        let recorder, stream; 
-        let audioTrack, videoTrack; 
-        var user = false 
-        const gdmOptions = {
-            video: {
-                cursor: "always"
-            },
-            audio: {
-                echoCancellation: true,
-                noiseSuppression: true,
-                sampleRate: 44100
-            }
-        }       
-        async function startCapture() {
-            logElem.innerHTML = "";
-            videoElem.classList.remove('hidden')
-            video.classList.add('hidden')
-            try {
-                navigator.mediaDevices.getDisplayMedia({video:true})
-                    .then(displayStream =>{
-                        [videoTrack] = displayStream.getVideoTracks() 
-                        navigator.mediaDevices.getUserMedia({audio: {
-                                echoCancellation: true,
-                                noiseSuppression: true,
-                                sampleRate: 44100
-                            }})
-                            .then(audioStream=>{
-                                [audioTrack] = audioStream.getAudioTracks()
-                                stream = new MediaStream([videoTrack, audioTrack])                                
-                                videoElem.srcObject = stream 
-                                recorder = new MediaRecorder(stream)                                                
-                                const chunks = []
-                                recorder.ondataavailable = e => {
-                                    chunks.push(e.data)                                    
-                                }
-                                recorder.onstop = e => {    
-                                    // console.log(chunks.length)                
-                                    videoElem.classList.add('hidden')
-                                    video.classList.remove('hidden')
-                                    const completed = new Blob(chunks, {type: chunks[0].type})
-                                    video.src = URL.createObjectURL(completed)                                       
-                                    download.href = window.URL.createObjectURL(completed)                                        
-                                }
-                                recorder.start()
-                                dumpOptionsInfo();
-                            })
-                })
-            } catch(err) {
-                console.error("Error: " + err);
-            }
-        }
-
-        function uploadVideoResource() {
-
-        }
-
-        function dumpOptionsInfo() {
-            const videoTrack = videoElem.srcObject.getVideoTracks()[0];
-            
-            console.log = msg => logElem.innerHTML += `${msg}<br>`;
-            logElem.innerHTML = JSON.stringify(videoTrack.getSettings(), null, 2)
-            console.info("Track settings:");
-            console.info(JSON.stringify(videoTrack.getSettings(), null, 2));
-            console.info("Track constraints:");
-            console.info(JSON.stringify(videoTrack.getConstraints(), null, 2));
-        }
-
-        // function toggle(){            
-        //     if(user == false) {
-        //         user = true
-        //         videoElem.srcObject = navigator.mediaDevices.getUserMedia({video:true})
-        //     }else {
-        //         user = false
-        //         videoElem.srcObject = stream
-        //     }
-        // }
-        
-        // toggleElem.addEventListener('click', toggle())
-        function stopCapture(evt) {
-            console.log(evt)
-            let tracks = videoElem.srcObject.getTracks();
-            tracks.forEach(track => track.stop());            
-            recorder.stop()
-            stream.getVideoTracks()[0].stop()            
-            // videoElem.srcObject = null;
-        }
-
-
-        startElem.addEventListener("click", function(evt){
-            startCapture()
-        }, false)    
-
-        stopElem.addEventListener("click", function(evt){
-            stopCapture()
-        }, false)        
-    </script>    
+    
+    <script src="/dist/js/index.js"></script>    
 </body>
 </html>

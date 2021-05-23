@@ -1,0 +1,99 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400&display=swap");
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+}
+
+body {
+  margin: 0 10vh;
+  display: grid;
+  grid-gap: 12px;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: minmax(100px, auto);
+}
+
+nav {
+  grid-column-start: 1;
+  grid-column-end: 7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+nav ul {
+  padding: 0;
+}
+
+nav ul li {
+  list-style: none;
+  display: inline-block;
+}
+
+nav ul li a {
+  text-decoration: none;
+  padding: 6px;
+}
+
+header {
+  grid-column-start: 1;
+  grid-column-end: 7;
+}
+
+header, section {
+  grid-column-start: 1;
+  grid-column-end: 7;
+}
+
+main {
+  grid-column-start: 1;
+  grid-column-end: 7;
+  display: grid;
+  grid-template-columns: 6;
+}
+
+main menu {
+  grid-column-start: 1;
+  grid-column-end: 7;
+  display: flex;
+  align-items: flex-start;
+  margin: 0;
+  padding: 0;
+}
+
+main section {
+  grid-column-start: 1;
+  grid-column-end: 4;
+  border: solid red;
+}
+
+main section video {
+  overflow-x: hidden;
+  border: solid black;
+  box-shadow: 3px 3px;
+}
+
+main .status {
+  border: solid 3px;
+  box-shadow: 3px 3px;
+  grid-column-start: 5;
+  grid-column-end: 7;
+}
+
+.hidden {
+  display: none;
+}
+
+button {
+  padding: 12px 24px;
+  border: solid 2px;
+  background-color: white;
+  box-shadow: 3px 3px;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+button {
+  margin-right: 12px;
+}
+/*# sourceMappingURL=index.css.map */
