@@ -7,7 +7,7 @@ A simple screen recorder project.
 ![project screenshot](./screenshots/screenshot.png)
 ## About 
 
-This projects implements a simple screen recorder + audio recorder using the browser native solutions with JavaScript. It allows the user to record his mic and share the screen at the same time, to the same file.
+This projects implements a simple screen recorder + audio recorder using the browser native solutions with JavaScript. It allows the user to record his mic and share the screen at the same time, and by the end is able to save it to a videofile.
 ## How to setup 
 
 To build the SCSS files you can use VS Code extension Live Sass. It would watch the .scss files and then build them to the dist/css folder. 
