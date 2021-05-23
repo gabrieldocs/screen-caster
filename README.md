@@ -27,12 +27,12 @@ You can contribute to the project by:
 ## Next steps 
 The next steps in the implementation is to:
 
--[ ] Add a webcam capture over the video 
--[ ] Manipulate elements position over the recorded video 
--[ ] Manipulate multiple sources at the same time 
--[ ] Manipulate multiple audio elements or textual elements at the same time 
--[ ] Provide a infrastructure to upload the recorded file via HTTP 
--[ ] Provide a solution to stream the capture to a service like Vimeo or Youtube
+- [ ] Add a webcam capture over the video 
+- [ ] Manipulate elements position over the recorded video 
+- [ ] Manipulate multiple sources at the same time 
+- [ ] Manipulate multiple audio elements or textual elements at the same time 
+- [ ] Provide a infrastructure to upload the recorded file via HTTP 
+- [ ] Provide a solution to stream the capture to a service like Vimeo or Youtube
 ## License 
 
 This repository is under MIT License. Lucas Gabriel G. dos Santos. 
